@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            id="org.seasar.resource.synchronizer.actionSet1"
+            label="%plugin.label"
+            visible="true">
+         <menu
+               id="org.seasar.resource.synchronizer.menu"
+               label="%plugin.label">
+            <groupMarker
+                  name="org.seasar.resource.synchronizer.groupMarker">
+            </groupMarker>
+         </menu>
+         <action
+               class="org.seasar.resource.synchronizer.action.ToggleServerAction"
+               icon="icons/refresh_start.gif"
+               id="org.seasar.resource.synchronizer.action.toggle"
+               label="%start"
+               menubarPath="org.seasar.resource.synchronizer.menu/org.seasar.resource.synchronizer.groupMarker"
+               toolbarPath="org.seasar.resource.synchronizer.menu/org.seasar.resource.synchronizer.groupMarker">
+         </action>
+      </actionSet>
+   </extension>
+   <extension
+         point="org.eclipse.ui.startup">
+      <startup
+            class="org.seasar.resource.synchronizer.startup.ServerStartup">
+      </startup>
+   </extension>
+
+</plugin>
