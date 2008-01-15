@@ -35,5 +35,4 @@ public class ServerStartup implements IStartup {
 			}
 		});
 	}
-
 }

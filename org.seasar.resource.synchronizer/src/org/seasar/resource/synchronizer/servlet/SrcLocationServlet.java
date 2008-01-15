@@ -80,6 +80,5 @@ public class SrcLocationServlet extends HttpServlet {
 				w.close();
 			}
 		}
-
 	}
 }

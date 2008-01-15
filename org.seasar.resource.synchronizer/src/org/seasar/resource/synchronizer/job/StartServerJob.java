@@ -49,5 +49,4 @@ public class StartServerJob extends WorkspaceJob {
 		}
 		return Status.OK_STATUS;
 	}
-
 }

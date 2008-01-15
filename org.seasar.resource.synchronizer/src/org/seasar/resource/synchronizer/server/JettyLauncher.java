@@ -68,7 +68,7 @@ public class JettyLauncher {
 	}
 
 	public void stop() {
-		if (this.server != null && this.server.isRunning()) {
+		if (isRunning()) {
 			try {
 				this.server.stop();
 			} catch (Exception e) {
