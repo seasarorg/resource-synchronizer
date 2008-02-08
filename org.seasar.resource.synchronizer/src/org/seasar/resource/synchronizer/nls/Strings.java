@@ -34,6 +34,14 @@ public class Strings extends NLS {
 
 	public static String LABEL_STOP;
 
+	public static String MSG_NEW_DEBUG_JSP;
+
+	public static String TITLE_NEW_DEBUG_JSP;
+
+	public static String MSG_DEFINE_FOLDER;
+
+	public static String MSG_CREATE_CONTENTS;
+
 	static {
 		Class<Strings> clazz = Strings.class;
 		NLS.initializeMessages(clazz.getName(), clazz);

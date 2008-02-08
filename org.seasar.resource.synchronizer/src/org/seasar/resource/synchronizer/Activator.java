@@ -17,6 +17,7 @@ package org.seasar.resource.synchronizer;
 
 import java.io.File;
 
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.seasar.eclipse.common.resource.LogUtil;
@@ -110,5 +111,9 @@ public class Activator extends AbstractUIPlugin {
 		if (action != null) {
 			action.checkEnabled();
 		}
+	}
+
+	public static IDialogSettings getSettings() {
+		return getDefault().getDialogSettings();
 	}
 }

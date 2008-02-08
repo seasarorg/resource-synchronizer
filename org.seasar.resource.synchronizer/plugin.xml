@@ -30,5 +30,21 @@
             class="org.seasar.resource.synchronizer.startup.ServerStartup">
       </startup>
    </extension>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <category
+            id="org.seasar.resource.synchronizer.category"
+            name="%plugin.name">
+      </category>
+      <wizard
+            canFinishEarly="false"
+            category="org.seasar.resource.synchronizer.category"
+            class="org.seasar.resource.synchronizer.wizard.DebugJspCreationWizard"
+            hasPages="true"
+            icon="icons/jsp.png"
+            id="org.seasar.resource.synchronizer.wizard.debug"
+            name="%wizard.debug.name">
+      </wizard>
+   </extension>
 
 </plugin>
