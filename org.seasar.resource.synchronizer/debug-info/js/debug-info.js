@@ -41,7 +41,8 @@ Ext.onReady(function(){
 	}
 	
 	function convertStackTrace() {
-		var row = $('div#stacktrace > pre').text().split('\n');
+		var pre = $('div#stacktrace > pre');
+		var row = pre.text().split(/[\r\n]/);
 		var title = row.shift();
 		var len = row.length;
 		var datas = new Array();
@@ -60,6 +61,7 @@ Ext.onReady(function(){
 				datas.push([method,clazz,line]);
 			}
 		}
+		pre.remove();
 		return {title: title, data:datas};
 	}
 	
@@ -85,7 +87,8 @@ Ext.onReady(function(){
 			resizeTabs:true,
 			autoExpandColumn: 'method',
 			id:id.title + '-xid',
-			title: datas.title,
+			tbar: ['<b>' + datas.title + '</b>'],
+			title: 'StackTrace',
 			autoScroll:true
 		});
 		gp.on('rowdblclick',function(){
@@ -101,13 +104,7 @@ Ext.onReady(function(){
 				enableTabScroll:true,
 				plugins: new Ext.ux.TabCloseMenu(),
 				items:[
-					{
-						title: 'StackTrace',
-						autoScroll:true,
-						items:[
-							createStackTraceGrid()
-						]
-					}
+					createStackTraceGrid()
 				]
 	});
 	

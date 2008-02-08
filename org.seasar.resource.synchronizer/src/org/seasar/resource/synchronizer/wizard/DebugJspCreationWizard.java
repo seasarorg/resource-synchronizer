@@ -94,7 +94,8 @@ public class DebugJspCreationWizard extends BasicNewResourceWizard implements
 							ResourceUtil.createDir(folder, p.toString());
 						} else {
 							IFile file = folder.getFile(p);
-							if (file.exists() == false) {
+							if (file.exists() == false
+									&& file.getName().startsWith(".") == false) {
 								try {
 									InputStream stream = new BufferedInputStream(
 											url.openStream());
