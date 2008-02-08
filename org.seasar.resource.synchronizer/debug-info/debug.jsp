@@ -1,5 +1,4 @@
-<html>
-<head>
+<html><head>
 	<title>Rich Error Screen For Servlet/JSP</title>
 	<link rel="stylesheet" type="text/css" href="./css/ext-all.css" />
 	<link rel="stylesheet" type="text/css" href="./css/xtheme-gray.css" />
@@ -24,9 +23,9 @@
 		var debuginfo = {};
 		debuginfo.loadbasic = function() {
 			return [
-				['ContextPath','/application'],
-				['RequestURI','/application/hoge/moge'],
-				['RequestMethod','GET']
+				['ContextPath','<%= request.getContextPath() %>'],
+				['RequestURI','<%= request.getRequestURI() %>'],
+				['RequestMethod','<%= request.getMethod() %>']
 			];
 		};
 		debuginfo.loadRequestParam = function() {
