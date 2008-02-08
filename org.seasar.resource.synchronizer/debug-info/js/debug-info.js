@@ -1,4 +1,3 @@
-Ext.BLANK_IMAGE_URL = './images/gray/s.gif';
 Ext.onReady(function(){
 	Ext.state.Manager.setProvider(new Ext.state.CookieProvider());
 	
@@ -12,7 +11,7 @@ Ext.onReady(function(){
 				]
 			}),
 			columns: [
-				{id:'key',header: "Key", width: 100, sortable: true, dataIndex: 'key'},
+				{id:'key',header: "Key", width: 150, sortable: true, dataIndex: 'key'},
 				{id:'value',header: "Value", width: 50, sortable: true, dataIndex: 'value'}
 			],
 			tbar:[
@@ -92,7 +91,7 @@ Ext.onReady(function(){
 			autoScroll:true
 		});
 		gp.on('rowdblclick',function(){
-				// ResourceSyncronizer‚ÉHTTPƒŠƒNƒGƒXƒg‚ğ“Š‚°‚éŠ´‚¶B
+				// ResourceSyncronizerï¿½ï¿½HTTPï¿½ï¿½ï¿½Nï¿½Gï¿½Xï¿½gï¿½ğ“Š‚ï¿½ï¿½éŠ´ï¿½ï¿½ï¿½B
 		});
 		return gp;
 	}
