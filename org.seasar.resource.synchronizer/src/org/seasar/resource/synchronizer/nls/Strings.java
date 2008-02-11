@@ -54,6 +54,8 @@ public class Strings extends NLS {
 
 	public static String ERR_OUTPUT_DIR_HAS_ROOT;
 
+	public static String ERR_OUTPUT_DIR_ALREADY_EXISTS;
+
 	static {
 		Class<Strings> clazz = Strings.class;
 		NLS.initializeMessages(clazz.getName(), clazz);

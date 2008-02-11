@@ -18,6 +18,7 @@ package org.seasar.resource.synchronizer.wizard;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.window.Window;
@@ -36,7 +37,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.views.navigator.ResourceComparator;
+import org.seasar.eclipse.common.resource.ResourceUtil;
 import org.seasar.eclipse.common.widget.ResourceTreeSelectionDialog;
+import org.seasar.resource.synchronizer.Activator;
 import org.seasar.resource.synchronizer.nls.Strings;
 
 /**
@@ -84,19 +87,29 @@ public class DebugJspCreationWizardPage extends WizardPage {
 
 		output.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
-				setErrorMessage(null);
-				setPageComplete(false);
-				String s = ((Text) e.widget).getText();
-				if (s == null || s.length() < 1) {
-					setErrorMessage(Strings.ERR_SELECT_OUTPUT_DIR);
-				} else {
-					IPath root = new Path(contextRoot.getText());
-					IPath out = new Path(s);
-					if (root.isPrefixOf(out)) {
-						setPageComplete(true);
+				try {
+					setErrorMessage(null);
+					setPageComplete(false);
+					String s = ((Text) e.widget).getText();
+					if (s == null || s.length() < 1) {
+						setErrorMessage(Strings.ERR_SELECT_OUTPUT_DIR);
 					} else {
-						setErrorMessage(Strings.ERR_OUTPUT_DIR_HAS_ROOT);
+						IPath root = new Path(contextRoot.getText());
+						IPath out = new Path(s);
+						if (root.isPrefixOf(out)) {
+							IContainer c = ResourceUtil.getResourceRoot()
+									.getFolder(out);
+							if (c.exists() == false || c.members().length < 1) {
+								setPageComplete(true);
+							} else {
+								setErrorMessage(Strings.ERR_OUTPUT_DIR_ALREADY_EXISTS);
+							}
+						} else {
+							setErrorMessage(Strings.ERR_OUTPUT_DIR_HAS_ROOT);
+						}
 					}
+				} catch (CoreException ex) {
+					Activator.log(ex);
 				}
 			}
 		});
