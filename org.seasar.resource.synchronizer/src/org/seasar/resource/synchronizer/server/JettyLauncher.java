@@ -24,6 +24,7 @@ import org.mortbay.jetty.servlet.ServletHolder;
 import org.seasar.resource.synchronizer.Activator;
 import org.seasar.resource.synchronizer.servlet.ListServlet;
 import org.seasar.resource.synchronizer.servlet.RefreshServlet;
+import org.seasar.resource.synchronizer.servlet.SelectionServlet;
 import org.seasar.resource.synchronizer.servlet.SrcLocationServlet;
 
 /**
@@ -55,6 +56,8 @@ public class JettyLauncher {
 			root.addServlet(new ServletHolder(new ListServlet()), "/list");
 			root.addServlet(new ServletHolder(new SrcLocationServlet()),
 					"/srcloc");
+			root.addServlet(new ServletHolder(new SelectionServlet()),
+					"/select");
 			try {
 				server.start();
 			} catch (Exception e) {

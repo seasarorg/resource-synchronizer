@@ -1,8 +1,9 @@
 Ext.onReady(function(){
 	Ext.state.Manager.setProvider(new Ext.state.CookieProvider());
-	
+
 	function createGrid(id, title, data) {
 		var gp = new Ext.grid.GridPanel({
+			loadMask: true,
 			store: new Ext.data.SimpleStore({
 				data: data,
 				fields: [
@@ -64,9 +65,24 @@ Ext.onReady(function(){
 		return {title: title, data:datas};
 	}
 	
+	var mainArea = new Ext.TabPanel({
+				region:'center',
+				deferredRender:false,
+				activeTab:0,
+				enableTabScroll:true,
+				plugins: new Ext.ux.TabCloseMenu()
+	});
+
 	function createStackTraceGrid() {
 		var datas = convertStackTrace();
+		var expander = new Ext.grid.RowExpander({
+			lazyRender:true,
+			tpl : new Ext.Template(
+				'<textarea name=\"{codename}\" class=\"java:showcolumns:nocontrols:firstline[{firstline}]\">{code}</textarea>'
+			)
+		});
 		var gp = new Ext.grid.GridPanel({
+			loadMask: true,
 			store: new Ext.data.SimpleStore({
 				data: datas.data,
 				fields: [
@@ -76,6 +92,7 @@ Ext.onReady(function(){
 				]
 			}),
 			columns: [
+				expander,
 				{id:'method',header: 'Method' , width: 100, sortable: false, dataIndex: 'method'},
 				{id:'clazz' ,header: 'Class'  , width: 100, sortable: false, dataIndex: 'clazz'},
 				{id:'line'  ,header: 'Line No', width: 50,  sortable: false, dataIndex: 'line'}
@@ -83,6 +100,8 @@ Ext.onReady(function(){
 			viewConfig: {
 				forceFit: true
 			},
+			plugins: expander,
+			collapsible: true,
 			resizeTabs:true,
 			autoExpandColumn: 'method',
 			id:id.title + '-xid',
@@ -90,24 +109,63 @@ Ext.onReady(function(){
 			title: 'StackTrace',
 			autoScroll:true
 		});
-		gp.on('rowdblclick',function(){
-				// ResourceSyncronizer��HTTP���N�G�X�g�𓊂��銴���B
+		gp.on('rowdblclick',function(grid,rowIndex,e){
+			expander.toggleRow(rowIndex);
 		});
+		expander.on('beforeexpand',function(me ,rec ,body ,rowIndex){
+			var fl = rec.get('firstline');
+			if(fl != null) {
+				return true;
+			} else {
+				var m = rec.get('method');
+				var clazz = m.substring(0 ,m.lastIndexOf('.'));
+				var ds = new Ext.data.Store({
+					proxy: new Ext.data.ScriptTagProxy({
+						url: debuginfo.rsUrl + '/select'
+					}),
+					reader: new Ext.data.JsonReader({
+						root: 'codes',
+						totalProperty: 'results'
+					},[
+						{name:'firstline'},
+						{name:'code'}
+					]),
+					baseParams: {
+						project: debuginfo.project,
+						size: Ext.state.Manager.get('codeLineSize',10),
+						openInEditor: Ext.state.Manager.get('opneInEditor',true),
+						classname:clazz,
+						line:rec.get('line')
+					}
+				});
+				var mask = new Ext.LoadMask(mainArea.getEl() ,{store:ds});
+				ds.on('load',function(store ,records ,options){
+					if(0 < records.length) {
+						var record = records[0];
+						var c = record.get('code').replace(/\t/g,'    ');
+						rec.set('firstline' ,record.get('firstline'));
+						rec.set('code' ,c);
+						var codename = 'code-' + rowIndex;
+						rec.set('codename',codename);
+						expander.expandRow(rowIndex);
+						var hilight = function(m, r, b, ri){
+							if(rowIndex == ri){
+								dp.sh.HighlightAll(codename);
+							}
+						};
+						hilight(me ,record ,body ,rowIndex);
+						expander.on('expand', hilight);
+					}
+				});
+				ds.load();
+				return false;
+			}
+		})
 		return gp;
 	}
 	
-	var mainArea = new Ext.TabPanel({
-				region:'center',
-				deferredRender:false,
-				activeTab:0,
-				enableTabScroll:true,
-				plugins: new Ext.ux.TabCloseMenu(),
-				items:[
-					createStackTraceGrid()
-				]
-	});
+	mainArea.add(createStackTraceGrid());
 	
-
 	function createClickHandler(id, title, dataloader) {
 		return function(){
 			if(mainArea.findById(id) == null) {
@@ -129,10 +187,9 @@ Ext.onReady(function(){
 	}
 	
 	var menuTree = new Ext.tree.TreePanel({
-				region:'west',
 				el:'menu',
 				id:'menu-panel',
-				title:'Menu',
+				title:'Debug Information',
 				width: 200,
 				minSize: 175,
 				maxSize: 400,
@@ -169,6 +226,35 @@ Ext.onReady(function(){
 	
 	rootNode.appendChild([http,javaNode]);
 	menuTree.setRootNode(rootNode);
+
+	setTimeout(function(){
+		menuTree.expandPath(http.getPath());
+		setTimeout(function(){
+			menuTree.expandPath(javaNode.getPath());
+		},100);
+	},400);
+	
+	var configArea = new Ext.grid.PropertyGrid({
+		title:'Settings',
+		border:false,
+		iconCls:'settings',
+		source: {
+			'codeLineSize':10,
+			'opneInEclipse':true
+		}
+	});
+	configArea.on('render',function(){
+		configArea.on('beforeexpand',function(){
+			var props = configArea.getSource();
+			props['codeLineSize'] = Ext.state.Manager.get('codeLineSize',10);
+			props['opneInEclipse'] = Ext.state.Manager.get('opneInEditor',true);
+			configArea.setSource(props);
+		});
+	});
+	configArea.on('propertychange',function(props){
+		Ext.state.Manager.set('codeLineSize',props['codeLineSize']);
+		Ext.state.Manager.set('opneInEditor',props['opneInEclipse']);
+	});
 	
 	var viewport = new Ext.Viewport({
 		layout:'border',
@@ -177,9 +263,26 @@ Ext.onReady(function(){
 				region:'north',
 				el: 'top',
 				height:32
-			}),menuTree,mainArea
-			
+			}),{
+				region:'west',
+				id:'west-panel',
+				title:'Menu',
+				split:true,
+				width: 200,
+				minSize: 175,
+				maxSize: 400,
+				collapsible: true,
+				margins:'0 0 0 5',
+				layout:'accordion',
+				layoutConfig:{
+					animate:true
+				},
+				items: [
+					menuTree,
+					configArea
+				]
+			},
+			mainArea
 		]
 	});
-	menuTree.expandAll();
 });

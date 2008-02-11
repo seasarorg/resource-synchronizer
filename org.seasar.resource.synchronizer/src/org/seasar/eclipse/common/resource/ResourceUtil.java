@@ -137,4 +137,10 @@ public class ResourceUtil {
 		return null;
 	}
 
+	public static IProject getProject(String name) {
+		if (name == null || name.length() < 1) {
+			return null;
+		}
+		return ResourcesPlugin.getWorkspace().getRoot().getProject(name);
+	}
 }

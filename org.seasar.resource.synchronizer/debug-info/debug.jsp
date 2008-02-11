@@ -4,11 +4,15 @@
 	<title>Rich Error Screen For Servlet/JSP</title>
 	<link rel="stylesheet" type="text/css" href="<%= calcPath(request) %>/css/ext-all.css" />
 	<link rel="stylesheet" type="text/css" href="<%= calcPath(request) %>/css/xtheme-gray.css" />
+	<link rel="stylesheet" type="text/css" href="<%= calcPath(request) %>/css/SyntaxHighlighter.css"></link>
 	<script type="text/javascript" src="<%= calcPath(request) %>/js/jquery-1.2.2.min.js"></script>
 	<script type="text/javascript" src="<%= calcPath(request) %>/js/ext-base.js"></script>
 	<script type="text/javascript" src="<%= calcPath(request) %>/js/ext-all.js"></script>
 	<script type="text/javascript" src="<%= calcPath(request) %>/js/TabCloseMenu.js"></script>
-	<script type="text/javascript" src="<%= calcPath(request) %>/js/debug-info.js"></script>
+	<script type="text/javascript" src="<%= calcPath(request) %>/js/RowExpander.js"></script>
+	<script type="text/javascript" src="<%= calcPath(request) %>/js/shCore.js"></script>
+	<script type="text/javascript" src="<%= calcPath(request) %>/js/shBrushJava.js"></script>
+	<script type="text/javascript" src="<%= calcPath(request) %>/js/debug-info.js?<%= new java.util.Date().getTime() %>"></script>
 	<style type="text/css">
 	html, body {
 		font:normal 12px verdana;
@@ -21,12 +25,15 @@
 	p {
 		margin:5px;
 	}
+    .settings {
+        background-image:url(<%= calcPath(request) %>/images/folder_wrench.png);
+    }
 	</style>
 </head>
 <body>
-	<div id="top">
-		<p><b>Rich Error Screen For Servlet/JSP</b></p>
-	</div>
+<div id="top">
+	<p><b>Rich Error Screen For Servlet/JSP</b></p>
+</div>
 <div id="menu"></div>
 <div id="main"></div>
 <div id="stacktrace" class="x-hide-visibility">
@@ -45,6 +52,8 @@ if(exception != null) {
 <script type="text/javascript"><!-- 
 	Ext.BLANK_IMAGE_URL = '<%= calcPath(request) %>/images/gray/s.gif';
 	var debuginfo = {};
+	debuginfo.rsUrl = 'http://localhost:8386';
+	debuginfo.project = 'servlet-test';
 	debuginfo.loadbasic = function() {
 		return [
 			['ContextPath','<%= request.getContextPath() %>'],
