@@ -1,5 +1,6 @@
 <%@ page isErrorPage="true" %><%! 
 	static final String ERROR_SCREEN_PATH = "/error";
+	static final String PROJECT = "servlet-test";
 %><html><head>
 	<title>Rich Error Screen For Servlet/JSP</title>
 	<link rel="stylesheet" type="text/css" href="<%= calcPath(request) %>/css/ext-all.css" />
@@ -53,7 +54,7 @@ if(exception != null) {
 	Ext.BLANK_IMAGE_URL = '<%= calcPath(request) %>/images/gray/s.gif';
 	var debuginfo = {};
 	debuginfo.rsUrl = 'http://localhost:8386';
-	debuginfo.project = 'servlet-test';
+	debuginfo.project = '<%= PROJECT %>';
 	debuginfo.loadbasic = function() {
 		return [
 			['ContextPath','<%= request.getContextPath() %>'],
