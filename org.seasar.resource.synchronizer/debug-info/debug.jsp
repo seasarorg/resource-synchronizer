@@ -1,6 +1,6 @@
 <%@ page isErrorPage="true" %><%! 
-	static final String ERROR_SCREEN_PATH = "/error";
-	static final String PROJECT = "servlet-test";
+	static final String ERROR_SCREEN_PATH = "###ERROR_SCRREN###";
+	static final String PROJECT = "###PROJECT###";
 %><html><head>
 	<title>Rich Error Screen For Servlet/JSP</title>
 	<link rel="stylesheet" type="text/css" href="<%= calcPath(request) %>/css/ext-all.css" />

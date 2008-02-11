@@ -21,19 +21,27 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.Enumeration;
 
+import org.eclipse.core.filebuffers.ITextFileBuffer;
+import org.eclipse.core.filebuffers.ITextFileBufferManager;
+import org.eclipse.core.filebuffers.LocationKind;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.text.FindReplaceDocumentAdapter;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.dialogs.WizardNewFolderMainPage;
 import org.eclipse.ui.wizards.newresource.BasicNewResourceWizard;
 import org.osgi.framework.Bundle;
 import org.seasar.eclipse.common.resource.ResourceUtil;
+import org.seasar.eclipse.common.runtime.AdaptableUtil;
 import org.seasar.resource.synchronizer.Activator;
 import org.seasar.resource.synchronizer.nls.Strings;
 
@@ -45,18 +53,12 @@ public class DebugJspCreationWizard extends BasicNewResourceWizard implements
 
 	public static final String NAME = DebugJspCreationWizard.class.getName();
 
-	protected WizardNewFolderMainPage folderMainPage;
+	protected DebugJspCreationWizardPage creationWizardPage;
+
+	protected IProject project;
 
 	public DebugJspCreationWizard() {
 		setDialogSettings(Activator.getSettings());
-	}
-
-	@Override
-	public void addPages() {
-		this.folderMainPage = new WizardNewFolderMainPage(
-				Strings.MSG_NEW_DEBUG_JSP, getSelection());
-		this.folderMainPage.setDescription(""); // TODO 説明書き。
-		addPage(this.folderMainPage);
 	}
 
 	@Override
@@ -64,6 +66,16 @@ public class DebugJspCreationWizard extends BasicNewResourceWizard implements
 		super.init(workbench, currentSelection);
 		setWindowTitle(Strings.TITLE_NEW_DEBUG_JSP);
 		setNeedsProgressMonitor(true);
+
+		this.project = AdaptableUtil.to(getSelection().getFirstElement(),
+				IProject.class);
+	}
+
+	@Override
+	public void addPages() {
+		this.creationWizardPage = new DebugJspCreationWizardPage(this.project);
+		this.creationWizardPage.setDescription(Strings.MSG_NEW_DEBUG_JSP);
+		addPage(this.creationWizardPage);
 	}
 
 	/*
@@ -73,15 +85,21 @@ public class DebugJspCreationWizard extends BasicNewResourceWizard implements
 	 */
 	@Override
 	public boolean performFinish() {
-		final IFolder folder = this.folderMainPage.createNewFolder();
+		IPath root = new Path(this.creationWizardPage.getContextRoot());
+		IPath out = new Path(this.creationWizardPage.getOutputDir());
+		IWorkspaceRoot wr = ResourceUtil.getResourceRoot();
+		ResourceUtil.createDir(wr, out.toString());
+		final IFolder folder = wr.getFolder(out);
 		if (folder == null) {
 			return false;
 		}
+		final String errorScreenPath = "/"
+				+ out.removeFirstSegments(root.segmentCount()).toString();
 		IRunnableWithProgress op = new IRunnableWithProgress() {
 			@SuppressWarnings("unchecked")
 			public void run(IProgressMonitor monitor)
 					throws InvocationTargetException, InterruptedException {
-				monitor.beginTask("", 0);
+				monitor.beginTask(Strings.MSG_CREATE_CONTENTS, 0);
 				Bundle bundle = Activator.getDefault().getBundle();
 				for (Enumeration e = bundle
 						.findEntries("debug-info", "*", true); e
@@ -104,6 +122,10 @@ public class DebugJspCreationWizard extends BasicNewResourceWizard implements
 									} finally {
 										stream.close();
 									}
+									if ("debug.jsp".equals(p.lastSegment())) {
+										processJsp(errorScreenPath, monitor,
+												file.getFullPath());
+									}
 								} catch (Exception ex) {
 									throw new InvocationTargetException(ex);
 								}
@@ -122,4 +144,27 @@ public class DebugJspCreationWizard extends BasicNewResourceWizard implements
 		return false;
 	}
 
+	protected void processJsp(final String errorScreenPath,
+			IProgressMonitor monitor, IPath p) throws CoreException {
+		ITextFileBufferManager.DEFAULT.connect(p, LocationKind.IFILE, monitor);
+		try {
+			ITextFileBuffer buf = ITextFileBufferManager.DEFAULT
+					.getTextFileBuffer(p, LocationKind.IFILE);
+			try {
+				IDocument doc = buf.getDocument();
+				FindReplaceDocumentAdapter finder = new FindReplaceDocumentAdapter(
+						doc);
+				finder.find(0, "###ERROR_SCRREN###", true, true, false, true);
+				finder.replace(errorScreenPath, false);
+				finder.find(0, "###PROJECT###", true, true, false, true);
+				finder.replace(project.getName(), false);
+				buf.commit(monitor, true);
+			} catch (Exception ex) {
+				buf.revert(monitor);
+			}
+		} finally {
+			ITextFileBufferManager.DEFAULT.disconnect(p, LocationKind.IFILE,
+					monitor);
+		}
+	}
 }

@@ -38,9 +38,21 @@ public class Strings extends NLS {
 
 	public static String TITLE_NEW_DEBUG_JSP;
 
-	public static String MSG_DEFINE_FOLDER;
-
 	public static String MSG_CREATE_CONTENTS;
+
+	public static String LABEL_CONTEXT_ROOT_DIR;
+
+	public static String LABEL_OUT_PUT_DIR;
+
+	public static String LABEL_BROWSE;
+
+	public static String MSG_SELECT_CONTEXT_ROOT_DIR;
+
+	public static String MSG_SELECT_OUTPUT_DIR;
+
+	public static String ERR_SELECT_OUTPUT_DIR;
+
+	public static String ERR_OUTPUT_DIR_HAS_ROOT;
 
 	static {
 		Class<Strings> clazz = Strings.class;
