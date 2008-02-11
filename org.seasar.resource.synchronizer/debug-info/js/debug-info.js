@@ -233,18 +233,21 @@ Ext.onReady(function(){
 			menuTree.expandPath(javaNode.getPath());
 		},100);
 	},400);
-	
+
 	var configArea = new Ext.grid.PropertyGrid({
 		title:'Settings',
-		border:false,
 		iconCls:'settings',
+		collapsed: false,
 		source: {
 			'codeLineSize':10,
 			'opneInEclipse':true
 		}
 	});
+	configArea.getColumnModel().config[0].width = 100;
+	configArea.getColumnModel().config[0].fixed = true;
+	
 	configArea.on('render',function(){
-		configArea.on('beforeexpand',function(){
+		configArea.on('beforeexpand',function(tt){
 			var props = configArea.getSource();
 			props['codeLineSize'] = Ext.state.Manager.get('codeLineSize',10);
 			props['opneInEclipse'] = Ext.state.Manager.get('opneInEclipse',true);
