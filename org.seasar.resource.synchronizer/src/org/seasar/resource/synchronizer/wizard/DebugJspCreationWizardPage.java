@@ -128,6 +128,7 @@ public class DebugJspCreationWizardPage extends WizardPage {
 
 		setErrorMessage(null);
 		setMessage(null);
+		setPageComplete(false);
 		setControl(composite);
 	}
 
