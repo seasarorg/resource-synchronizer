@@ -2,7 +2,7 @@
 <feature
       id="org.seasar.resource.synchronizer.feature"
       label="%plugin.name"
-      version="0.0.2"
+      version="0.0.3"
       provider-name="%plugin.auther"
       plugin="org.seasar.resource.synchronizer">
 
@@ -46,7 +46,7 @@ governing permissions and limitations under the License.
          id="org.seasar.resource.synchronizer"
          download-size="0"
          install-size="0"
-         version="0.0.1"
+         version="0.0.3"
          unpack="false"/>
 
 </feature>
