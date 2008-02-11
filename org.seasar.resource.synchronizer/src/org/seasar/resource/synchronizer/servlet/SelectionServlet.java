@@ -105,7 +105,7 @@ public class SelectionServlet extends HttpServlet {
 						}
 						code = document.get(begin, end - begin);
 						if (openInEditor) {
-							openInEditor(line, type);
+							openInEditor(document.getLineOffset(line) - 1, type);
 						}
 					}
 				}
@@ -152,7 +152,7 @@ public class SelectionServlet extends HttpServlet {
 		return document;
 	}
 
-	private void openInEditor(final int line, final IType type) {
+	private void openInEditor(final int offset, final IType type) {
 		new WorkbenchJob("") {
 			@Override
 			public IStatus runInUIThread(IProgressMonitor monitor) {
@@ -163,7 +163,7 @@ public class SelectionServlet extends HttpServlet {
 						ITextEditor editor = AdaptableUtil.to(ep,
 								ITextEditor.class);
 						if (editor != null) {
-							editor.selectAndReveal(line, 0);
+							editor.selectAndReveal(offset, 0);
 						}
 					}
 				} catch (Exception e) {

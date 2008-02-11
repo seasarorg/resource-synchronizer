@@ -13,7 +13,7 @@
 	<script type="text/javascript" src="<%= calcPath(request) %>/js/RowExpander.js"></script>
 	<script type="text/javascript" src="<%= calcPath(request) %>/js/shCore.js"></script>
 	<script type="text/javascript" src="<%= calcPath(request) %>/js/shBrushJava.js"></script>
-	<script type="text/javascript" src="<%= calcPath(request) %>/js/debug-info.js?<%= new java.util.Date().getTime() %>"></script>
+	<script type="text/javascript" src="<%= calcPath(request) %>/js/debug-info.js"></script>
 	<style type="text/css">
 	html, body {
 		font:normal 12px verdana;
