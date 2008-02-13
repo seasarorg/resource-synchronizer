@@ -24,6 +24,8 @@ import org.seasar.eclipse.common.resource.LogUtil;
  */
 public class ResourceTreeSelectionDialog extends ElementTreeSelectionDialog {
 
+	private static final Object[] EMPTY = new Object[0];
+
 	/**
 	 * @param parent
 	 * @param labelProvider
@@ -139,7 +141,7 @@ public class ResourceTreeSelectionDialog extends ElementTreeSelectionDialog {
 				IContainer c = (IContainer) inputElement;
 				return members(c);
 			}
-			return null;
+			return EMPTY;
 		}
 
 		private Object[] members(IContainer c) {

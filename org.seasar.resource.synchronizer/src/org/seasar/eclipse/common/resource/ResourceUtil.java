@@ -148,4 +148,14 @@ public class ResourceUtil {
 		}
 		return ResourcesPlugin.getWorkspace().getRoot().getProject(name);
 	}
+
+	public static IProject toProject(Object adaptable) {
+		if (adaptable instanceof IProject) {
+			return (IProject) adaptable;
+		} else if (adaptable instanceof IResource) {
+			return ((IResource) adaptable).getProject();
+		} else {
+			return AdaptableUtil.to(adaptable, IProject.class);
+		}
+	}
 }

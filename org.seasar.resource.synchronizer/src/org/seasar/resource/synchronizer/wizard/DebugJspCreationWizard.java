@@ -41,7 +41,6 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.wizards.newresource.BasicNewResourceWizard;
 import org.osgi.framework.Bundle;
 import org.seasar.eclipse.common.resource.ResourceUtil;
-import org.seasar.eclipse.common.runtime.AdaptableUtil;
 import org.seasar.resource.synchronizer.Activator;
 import org.seasar.resource.synchronizer.nls.Strings;
 
@@ -67,8 +66,8 @@ public class DebugJspCreationWizard extends BasicNewResourceWizard implements
 		setWindowTitle(Strings.TITLE_NEW_DEBUG_JSP);
 		setNeedsProgressMonitor(true);
 
-		this.project = AdaptableUtil.to(getSelection().getFirstElement(),
-				IProject.class);
+		this.project = ResourceUtil.toProject(currentSelection
+				.getFirstElement());
 	}
 
 	@Override

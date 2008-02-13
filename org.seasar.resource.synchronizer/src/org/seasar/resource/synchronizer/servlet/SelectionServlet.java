@@ -77,7 +77,7 @@ public class SelectionServlet extends HttpServlet {
 		final boolean openInEditor = Boolean.valueOf(req
 				.getParameter("openInEditor"));
 
-		int firstline = line;
+		int firstline = 1;
 		String code = NOT_FOUND_CODE;
 
 		try {
