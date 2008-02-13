@@ -133,7 +133,7 @@ Ext.onReady(function(){
 					baseParams: {
 						project: debuginfo.project,
 						size: Ext.state.Manager.get('codeLineSize',10),
-						openInEditor: Ext.state.Manager.get('opneInEclipse',true),
+						openInEditor: Ext.state.Manager.get('openInEclipse',true),
 						classname:clazz,
 						line:rec.get('line')
 					}
@@ -250,7 +250,7 @@ Ext.onReady(function(){
 		configArea.on('beforeexpand',function(tt){
 			var props = configArea.getSource();
 			props['codeLineSize'] = Ext.state.Manager.get('codeLineSize',10);
-			props['opneInEclipse'] = Ext.state.Manager.get('opneInEclipse',true);
+			props['openInEclipse'] = Ext.state.Manager.get('openInEclipse',true);
 			configArea.setSource(props);
 		});
 	});
