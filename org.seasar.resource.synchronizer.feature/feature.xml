@@ -2,7 +2,7 @@
 <feature
       id="org.seasar.resource.synchronizer.feature"
       label="%plugin.name"
-      version="0.0.3"
+      version="0.0.4"
       provider-name="%plugin.auther"
       plugin="org.seasar.resource.synchronizer">
 
