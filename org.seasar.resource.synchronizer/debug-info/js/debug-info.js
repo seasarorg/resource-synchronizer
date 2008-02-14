@@ -240,7 +240,7 @@ Ext.onReady(function(){
 		collapsed: false,
 		source: {
 			'codeLineSize':10,
-			'opneInEclipse':true
+			'openInEclipse':true
 		}
 	});
 	configArea.getColumnModel().config[0].width = 100;
@@ -256,7 +256,7 @@ Ext.onReady(function(){
 	});
 	configArea.on('propertychange',function(props){
 		Ext.state.Manager.set('codeLineSize',props['codeLineSize']);
-		Ext.state.Manager.set('opneInEclipse',props['opneInEclipse']);
+		Ext.state.Manager.set('opneInEclipse',props['openInEclipse']);
 	});
 	
 	var viewport = new Ext.Viewport({
