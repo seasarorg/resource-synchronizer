@@ -57,7 +57,7 @@ public class SelectionServlet extends HttpServlet {
 
 	private static final long serialVersionUID = -6726229074449503493L;
 
-	private static final String NOT_FOUND_CODE = "not found source code";
+	private static final String NOT_FOUND_CODE = "source code not found";
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
